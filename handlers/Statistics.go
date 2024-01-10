@@ -12,6 +12,17 @@ import (
 	"gorm.io/gorm"
 )
 
+type Statistics struct {
+	TimeStamp uint64  `json:"timestamp"`
+	P360      float64 `json:"p360"`
+	P180      float64 `json:"p180"`
+	P90       float64 `json:"p90"`
+	P30       float64 `json:"p30"`
+	P14       float64 `json:"p14"`
+	P7        float64 `json:"p7"`
+	P1        float64 `json:"p1"`
+}
+
 // @router   	  	/getStatistics    [get]
 // @description	  	List queries
 // @accept      	application/json
@@ -39,6 +50,17 @@ func (h handler) Statistics(ctx *gin.Context) {
 			// Handle other errors
 			ctx.JSON(http.StatusBadRequest, utils.HTTPError{Message: result.Error.Error()})
 		}
+	}
+
+	ret := Statistics{
+		TimeStamp: stats.TimeStamp,
+		P360:      stats.P360,
+		P180:      stats.P180,
+		P90:       stats.P90,
+		P30:       stats.P30,
+		P14:       stats.P14,
+		P7:        stats.P7,
+		P1:        stts.P1,
 	}
 
 	ctx.JSON(http.StatusOK, stats)

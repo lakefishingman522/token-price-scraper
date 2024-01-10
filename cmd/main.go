@@ -41,6 +41,9 @@ func main() {
 	// Create routers
 	router := gin.Default()
 
+	// Create a new endpoint /health
+	router.GET("/health", h.HealthCheck)
+
 	// Create a new endpoint /getStatistics
 	router.GET("/getStatistics", h.Statistics)
 
