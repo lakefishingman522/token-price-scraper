@@ -9,6 +9,8 @@ import (
 	"github.com/CascadiaFoundation/CascadiaTokenScrapper/utils"
 	"github.com/gin-gonic/gin"
 
+	"log"
+
 	"gorm.io/gorm"
 )
 
@@ -60,8 +62,48 @@ func (h handler) Statistics(ctx *gin.Context) {
 		P30:       stats.P30,
 		P14:       stats.P14,
 		P7:        stats.P7,
-		P1:        stts.P1,
+		P1:        stats.P1,
 	}
 
-	ctx.JSON(http.StatusOK, stats)
+	ctx.JSON(http.StatusOK, ret)
+}
+
+func (h handler) UpdatePriceStatistics() error {
+	stats := utils.GetPriceStatistics()
+
+	// Initialize a variable to hold the latest stats from the database
+	var latestStats models.TokenStatisticsModel
+	var err error
+
+	// Get the latest record.
+	// WARNING: This assumes that gorm orders by primary key, which might not always be the case.
+	// Include explicit ordering if needed.
+	res := h.DB.Order("updated_at desc").First(&latestStats)
+
+	// Check if a record was found
+	if res.Error == nil {
+		// Update the latest record
+		latestStats = stats
+
+		res = h.DB.Save(&latestStats)
+		if res.Error != nil {
+			log.Printf("Error updating stats: %v", res.Error)
+			err = res.Error
+		}
+	} else if errors.Is(res.Error, gorm.ErrRecordNotFound) {
+		// No record was found, so create a new one
+		newStats := stats
+
+		res = h.DB.Create(&newStats)
+		if res.Error != nil {
+			log.Printf("Error creating stats: %v", res.Error)
+			err = res.Error
+		}
+	} else {
+		log.Printf("Error getting latest stats: %v", res.Error)
+		err = res.Error
+	}
+
+	return err
+
 }

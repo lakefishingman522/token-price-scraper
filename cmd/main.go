@@ -55,6 +55,16 @@ func main() {
 	}
 
 	go func() {
+		ticker := time.NewTicker(24 * time.Minute)
+		for {
+			select {
+			case <-ticker.C:
+				h.UpdatePriceStatistics()
+			}
+		}
+	}()
+
+	go func() {
 		// service connections
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %s\n", err)
