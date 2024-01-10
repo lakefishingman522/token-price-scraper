@@ -36,8 +36,8 @@ func main() {
 	// Create routers
 	router := gin.Default()
 
-	// Create a new endpoint /health
-	router.GET("/getStatistics", h.HealthCheck)
+	// Create a new endpoint /getStatistics
+	router.GET("/getStatistics", h.Statistics)
 
 	srv := &http.Server{
 		Addr:    ":3000",
