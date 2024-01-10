@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"log"
+	// "log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -16,9 +16,14 @@ import (
 	db "github.com/CascadiaFoundation/CascadiaTokenScrapper/db"
 
 	"github.com/CascadiaFoundation/CascadiaTokenScrapper/handlers"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
+
+	logger := log.NewEntry(log.StandardLogger())
+
 	err := godotenv.Load(".env")
 	if err != nil {
 		panic(err)
@@ -39,8 +44,10 @@ func main() {
 	// Create a new endpoint /getStatistics
 	router.GET("/getStatistics", h.Statistics)
 
+	logger.Info("after /getStatistics")
+
 	srv := &http.Server{
-		Addr:    ":3000",
+		Addr:    ":" + os.Getenv("PORT"),
 		Handler: router,
 	}
 

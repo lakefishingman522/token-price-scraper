@@ -5,7 +5,7 @@ import (
 
 	"gorm.io/driver/sqlite"
 
-	_ "github.com/CascadiaFoundation/CascadiaTokenScrapper/models"
+	"github.com/CascadiaFoundation/CascadiaTokenScrapper/models"
 	// _ "github.com/jinzhu/gorm/dialects/postgres"
 	"gorm.io/gorm"
 
@@ -22,6 +22,13 @@ func Init() (*gorm.DB, error) {
 
 	logger := log.NewEntry(log.StandardLogger())
 	logger.Info("Connected to Database...")
+
+	// AutoMigrate will ONLY create tables, missing columns and missing indexes,
+	// and WON’T change existing column’s type or delete unused columns to protect your data.
+	err = db.AutoMigrate(&models.TokenStatisticsModel{})
+	if err != nil {
+		panic("failed to create table")
+	}
 
 	return db, nil
 }

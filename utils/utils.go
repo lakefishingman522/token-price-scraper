@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"os"
 	"time"
 
 	"github.com/go-resty/resty/v2"
@@ -51,7 +52,7 @@ func GetPriceStatistics() models.TokenStatisticsModel {
 			"fsym":    "ETH", // from symbol
 			"tsym":    "USD", // to symbol
 			"limit":   "720", // last 720 days
-			"api_key": "ae3b6f305c759ce21aa7d9e080566db8a4bf52a4a6d3a1eeae995ee4c6b0d3e6",
+			"api_key": os.Getenv("API_KEY"),
 		}).
 		Get("https://min-api.cryptocompare.com/data/v2/histoday")
 
@@ -79,7 +80,7 @@ func GetPriceStatistics() models.TokenStatisticsModel {
 			"fsym":    "ETH", // from symbol
 			"tsym":    "USD", // to symbol
 			"limit":   "48",  // last 48 hours
-			"api_key": "ae3b6f305c759ce21aa7d9e080566db8a4bf52a4a6d3a1eeae995ee4c6b0d3e6",
+			"api_key": os.Getenv("API_KEY"),
 		}).
 		Get("https://min-api.cryptocompare.com/data/v2/histohour")
 
