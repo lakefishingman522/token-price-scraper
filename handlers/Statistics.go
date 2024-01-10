@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
+	"time"
 
 	"errors"
 
@@ -70,6 +72,8 @@ func (h handler) Statistics(ctx *gin.Context) {
 
 func (h handler) UpdatePriceStatistics() error {
 	stats := utils.GetPriceStatistics()
+
+	fmt.Println("========", time.Now().Unix())
 
 	// Initialize a variable to hold the latest stats from the database
 	var latestStats models.TokenStatisticsModel
